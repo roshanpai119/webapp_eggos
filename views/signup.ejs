@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link rel="stylesheet" href="main.css" />
+    <title>Login to BuzzShelter</title>
+            <!-- link to main stylesheet -->
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+
+    <div id="signup_header" class="signup_header">
+        <h1>New User Registration</h1>
+        <p>Fill out the required information to set up a new account</p>
+        <hr>
+    </div>
+
+    <div id="signup_main" class="signup_main">
+
+        <label for="new_username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="new_username" maxlength="30" id="new_username" required>
+
+        <label for="new_password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="new_password" maxlength="30" id="new_password" required>
+
+        <label for="password-rpt"><b>Confirm Password</b></label>
+        <input type="password" placeholder="Confirm Password" name="password-rpt" maxlength="30" id="password-rpt" required>
+
+        <p><b>Please select your User Type:</b></p>
+
+        <input type="radio" id="usertype1" name="usertype" value="Homeless Person">
+        <label for="usertype1">Homeless Person</label>
+        <br>
+              
+        <input type="radio" id="usertype2" name="usertype" value="Homeless Shelter Admin" required>
+        <label for="usertype2">Homeless Shelter Admin</label>
+        <br>
+    </div>
+
+    <div id="signup_options" class="signup_options">
+        <button onclick="createUser()">Create Account</button>
+        <button onclick="cancelSignUp()">Cancel</button>
+    </div>
+
+
+    <script src="index.js"></script>
+
+
+
+    
+</body>
+</html>
