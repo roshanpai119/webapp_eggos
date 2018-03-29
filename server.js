@@ -1,10 +1,9 @@
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash = require('connect-flash');
 var path = require('path')
+var formidable = require('formidable');
+var fs = require('fs');
 
 
 var morgan = require('morgan');
@@ -13,13 +12,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 app.use(express.static(path.join(__dirname, 'views/public')));
-
-
-//var configDB = require('./config/database.js')
-
-// CONFIGURING DATABASE
-//mongoose.connect(configDB.url);
-
 
 //LOGGING REQUESTS TO CONSOLE
 app.use(morgan('dev'));
@@ -30,17 +22,41 @@ app.use(bodyParser.json())
 app.set('view engine', 'ejs');
 
 
+app.post('/upload', function(req, res){
 
-// required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
-
+    // create an incoming form object
+    var form = new formidable.IncomingForm();
+  
+    // specify that we want to allow the user to upload multiple files in a single request
+    form.multiples = true;
+  
+    // store all uploads in the /uploads directory
+    form.uploadDir = path.join(__dirname, 'views/public/uploads');
+  
+    // every time a file has been uploaded successfully,
+    // rename it to it's orignal name
+    form.on('file', function(field, file) {
+      fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
+  
+    // log any errors that occur
+    form.on('error', function(err) {
+      console.log('An error has occured: \n' + err);
+    });
+  
+    // once all the files have been uploaded, send a response to the client
+    form.on('end', function() {
+      res.end('success');
+    });
+  
+    // parse the incoming request containing the form data
+    form.parse(req);
+  
+  });
 
 
 //routes
-require('./app/routes.js')(app, passport);
+require('./app/routes.js')(app);
 
 //launch
 app.listen(port);
