@@ -6,7 +6,6 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 16px;
     min-height: 100%;
-    overflow: hidden;
 }
 
 img.logo {
@@ -87,17 +86,23 @@ div.options > button {
 div.profile_header > button {
     width: 200px;
     padding: 13px;
-    position: relative;
-    left: -500px;
-    vertical-align: middle;
     top: 5px;
-
+    display: inline-block;
 }
 
 div.profile_header {
-    position: relative;
     top: 0px;
     height: 65px;
+    position: relative;
+    text-align: left;
+}
+
+div.profile_header > input {
+    width: 200px;
+    padding: 13px;
+    left: 10px;
+    top: 0px;
+    display: inline-block;
 }
 
 div.signup_header {
@@ -143,4 +148,17 @@ div.signup_options {
     text-align: center;
 }
 
+div.uploader {
+    position: relative;
+    text-align: left;
+}
+
+table {
+    background-color: white;
+}
+
+td {
+    font-size: 12px;
+    text-align: center;
+}
 

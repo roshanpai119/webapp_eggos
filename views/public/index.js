@@ -1,4 +1,6 @@
+
 function login() {
+
     if ((document.getElementById("username").value === "user") && (document.getElementById("password").value === "pass")) {
         window.location = "/profile";
     } else {
@@ -46,7 +48,18 @@ function createUser() {
 
     window.location = "/profile";
 
+}
 
+function Shelter(_UID, _Name, _Capacity_max, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone) {
 
+    this._UID = _UID;
+    this._Name = _Name;
+    this._Capacity_max = _Capacity_max;
+    this._Restrictions = _Restrictions;
+    this._lat = _lat;
+    this._Notes = _Notes;
+    this._lon = _lon;
+    this._Addr = _Addr;
+    this._Phone = _Phone;
 
 }

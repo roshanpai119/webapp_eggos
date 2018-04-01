@@ -1,8 +1,8 @@
 $('.upload-btn').on('click', function (){
     $('#upload-input').click();
-    $('.progress-bar').text('0%');
-    $('.progress-bar').width('0%');
 });
+
+shelterArray = [];
 
 $('#upload-input').on('change', function(){
 
@@ -17,7 +17,19 @@ $('#upload-input').on('change', function(){
     for (var i = 0; i < files.length; i++) {
       var file = files[i];
 
-      // add the files to formData object for the data payload
+
+      var logFile = file;
+      var reader = new FileReader;
+      reader.readAsText(logFile);
+
+      reader.onload = function(e) {
+      rawLog = reader.result;
+        csvParser(reader.result);
+        
+      };
+
+
+            // add the files to formData object for the data payload
       formData.append('uploads[]', file, file.name);
     }
 
@@ -27,31 +39,13 @@ $('#upload-input').on('change', function(){
       data: formData,
       processData: false,
       contentType: false,
-      success: function(data){
-          console.log('upload successful!\n' + data);
-      },
+
       xhr: function() {
         // create an XMLHttpRequest
         var xhr = new XMLHttpRequest();
 
         // listen to the 'progress' event
         xhr.upload.addEventListener('progress', function(evt) {
-
-          if (evt.lengthComputable) {
-            // calculate the percentage of upload completed
-            var percentComplete = evt.loaded / evt.total;
-            percentComplete = parseInt(percentComplete * 100);
-
-            // update the Bootstrap progress bar with the new percentage
-            $('.progress-bar').text(percentComplete + '%');
-            $('.progress-bar').width(percentComplete + '%');
-
-            // once the upload reaches 100%, set the progress bar text to done
-            if (percentComplete === 100) {
-              $('.progress-bar').html('Done');
-            }
-
-          }
 
         }, false);
 
@@ -61,3 +55,115 @@ $('#upload-input').on('change', function(){
 
   }
 });
+
+function csvParser(data) {
+
+    var _UID;
+    var _Name;
+    var _Capacity_max;
+    var _Restrictions;
+    var _lat;
+    var _lon;
+    var _Addr;
+    var _Notes;
+    var _Phone;
+    var shelt;
+
+    var lines = data.split(/\r\n|\r|\n/g);
+    
+    for (var i = 1; i < lines.length - 1; i++) {
+
+      var curLine = lines[i];
+
+      var entries = curLine.split(",");
+
+      _UID = entries[0];
+      _Name = entries[1];
+      _Capacity_max = entries[2];
+      _Restrictions = entries[3];
+      _lat = entries[4];
+      _lon = entries[5];
+
+      _Addr = entries[6] + "," + entries[7] + "," + entries[8];
+
+      for (var j = 9; j < entries.length - 2; j++) {
+        if (_Notes == null) {
+          _Notes = entries[j] + "/"
+        } else {
+          _Notes = _Notes + entries[j] + "/"
+        }
+      }
+
+      _Notes = _Notes + entries[entries.length - 2];
+
+      _Phone = entries[entries.length - 1];
+
+      shelt = new Shelter(_UID, _Name, _Capacity_max, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
+      shelterArray.push(shelt);
+      appendTable(shelt);
+
+    }
+
+
+}
+
+function appendTable(shelt) {
+
+  var mixed = document.getElementById("targettable");
+  var tbody = document.createElement("tbody");
+
+    var tr = document.createElement("tr");
+
+    var td = document.createElement("td");
+    td.innerHTML = "<button onclick='extraInfo()'>" + shelt._UID + "</button>"
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Name);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Capacity_max);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Restrictions);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._lat);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._lon);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Addr);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Notes);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Phone);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+
+    tbody.appendChild(tr);
+
+
+  mixed.appendChild(tbody);
+
+
+
+}
