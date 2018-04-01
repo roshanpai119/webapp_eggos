@@ -73,9 +73,24 @@ function csvParser(data) {
     
     for (var i = 1; i < lines.length - 1; i++) {
 
-      var curLine = lines[i];
+      var data = lines[i];
+      var prev = 0;
+      var on = true;
+      var entries = [];
 
-      var entries = curLine.split(",");
+      for (var j = 0; j < data.length; j++) {
+
+          if (data.charAt(j) == '"') {
+            on = !on;
+          }
+          
+          if (on === true) {            
+            if ((data.charAt(j) == ",") || (j == data.length - 1)) {
+              entries.push(data.substring(prev, j + 1));
+              prev = j + 1;	
+            }    
+          }
+      }
 
       _UID = entries[0];
       _Name = entries[1];
@@ -83,20 +98,9 @@ function csvParser(data) {
       _Restrictions = entries[3];
       _lat = entries[4];
       _lon = entries[5];
-
-      _Addr = entries[6] + "," + entries[7] + "," + entries[8];
-
-      for (var j = 9; j < entries.length - 2; j++) {
-        if (_Notes == null) {
-          _Notes = entries[j] + "/"
-        } else {
-          _Notes = _Notes + entries[j] + "/"
-        }
-      }
-
-      _Notes = _Notes + entries[entries.length - 2];
-
-      _Phone = entries[entries.length - 1];
+      _Addr = entries[6];
+      _Notes = entries[7];
+      _Phone = entries[8];
 
       shelt = new Shelter(_UID, _Name, _Capacity_max, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
       shelterArray.push(shelt);
