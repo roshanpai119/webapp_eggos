@@ -4,17 +4,22 @@ var port = process.env.PORT || 8080;
 var path = require('path');
 var formidable = require('formidable');
 var fs = require('fs');
-
-
-var morgan = require('morgan');
+const flash = require('connect-flash');
+var express = require('express');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var session = require('express-session');
+var bodyParser = require('body-parser');
 
+app.use(cookieParser());
+app.use(session({
+    secret: "123",
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'views/public')));
 
 //LOGGING REQUESTS TO CONSOLE
-app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
