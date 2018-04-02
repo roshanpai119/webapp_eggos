@@ -85,9 +85,15 @@ function csvParser(data) {
           }
           
           if (on === true) {            
-            if ((data.charAt(j) == ",") || (j == data.length - 1)) {
-              entries.push(data.substring(prev, j + 1));
-              prev = j + 1;	
+              if ((data.charAt(j) == ",") || (j == data.length - 1)) {
+                  if (data.charAt(prev) == ",") {
+                      prev++;
+                  }
+                  if (data.charAt(prev) == '"') {
+                      prev++;
+                  }
+                  entries.push(data.substring(prev, j));
+                  prev = j;	
             }    
           }
       }
@@ -119,7 +125,7 @@ function appendTable(shelt) {
     var tr = document.createElement("tr");
 
     var td = document.createElement("td");
-    td.innerHTML = "<button onclick='extraInfo()'>" + shelt._UID + "</button>"
+    td.innerHTML = "<button onclick='displayShelter();'>" + shelt._UID + "</button>";
     tr.appendChild(td);
 
     var td = document.createElement("td");
