@@ -1,8 +1,7 @@
-$('.upload-btn').on('click', function (){
-    $('#upload-input').click();
-});
-
 shelterArray = [];
+
+var table1 = true;
+var table2 = false;
 
 $('#upload-input').on('change', function(){
 
@@ -32,27 +31,6 @@ $('#upload-input').on('change', function(){
             // add the files to formData object for the data payload
       formData.append('uploads[]', file, file.name);
     }
-
-    $.ajax({
-      url: '/upload',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-
-      xhr: function() {
-        // create an XMLHttpRequest
-        var xhr = new XMLHttpRequest();
-
-        // listen to the 'progress' event
-        xhr.upload.addEventListener('progress', function(evt) {
-
-        }, false);
-
-        return xhr;
-      }
-    });
-
   }
 });
 
@@ -126,7 +104,8 @@ function appendTable(shelt) {
     var tr = document.createElement("tr");
 
     var td = document.createElement("td");
-    td.innerHTML = "<button onclick='displayShelter();'>" + shelt._UID + "</button>";
+    var pass = JSON.stringify(shelt);
+    td.innerHTML = "<button id=" + shelt._UID + " onclick='displayShelter(this)'>" + shelt._UID + "</button>";
     tr.appendChild(td);
 
     var td = document.createElement("td");
@@ -174,6 +153,8 @@ function appendTable(shelt) {
 
 
   mixed.appendChild(tbody);
+  document.getElementById(shelt._UID).id = pass;
+
 }
 
 function search() {
@@ -239,4 +220,51 @@ function search() {
         }
       } 
     }
+}
+
+function displayShelter(object) {
+
+  object = JSON.parse(object.id);
+
+  table2 = true;
+  table1 = false;
+  on();
+
+  document.getElementById("data1").innerHTML = object._UID;
+  document.getElementById("data2").innerHTML = object._Name;
+  document.getElementById("data3").innerHTML = object._Capacity_max
+  document.getElementById("data4").innerHTML = object._Restrictions;
+  document.getElementById("data5").innerHTML = object._lat;
+  document.getElementById("data6").innerHTML = object._lon;
+  document.getElementById("data7").innerHTML = object._Addr;
+  document.getElementById("data8").innerHTML = object._Notes;
+  document.getElementById("data9").innerHTML = object._Phone;
+
+}
+
+function on() {
+
+  var x = document.getElementById("targettable");
+  var y = document.getElementById("newtargettable");
+
+  if (table1 === true) {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+
+  if (table2 === true) {
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+
+}
+
+function showData() {
+
+  table1 = true;
+  table2 = false;
+  on();
+
 }

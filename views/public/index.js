@@ -24,9 +24,6 @@ function forgotPassword() {
     window.location = "/forgotpassword";
 }
 
-function displayShelter() {
-    window.location = "/shelter";
-}
 
 function createUser() {
     var new_username = document.getElementById("new_username").value;

@@ -161,3 +161,18 @@ td {
     text-align: center;
 }
 
+#newtargettable {
+    display: none;
+    background-color: white;
+    width: 100%;
+}
+
+#targettable {
+    display: block;
+    background-color: white;
+    width: 100%;
+}
+
+tr {
+    width: 100%;
+}

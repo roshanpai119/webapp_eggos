@@ -13,6 +13,7 @@
         <button onclick="logout()">Logout</button>
         <input id="upload-input" type="file" name="uploads[]" multiple="multiple">
         <input type="text" id="searchBar" onkeyup="search()" placeholder="Search for names..">
+        <button onclick="showData()">Show All</button>
 
 
     </div>
@@ -31,6 +32,34 @@
             <th>Phone Number</th>
             </tr>
         </table>
+    </div>
+
+    <div id="specificsheltertable" class="specificsheltertable">
+            <table id="newtargettable" style="width:100%">
+                <tr>
+                <th>Dawar</th>
+                <th>Name</th> 
+                <th>Maximum Capacity</th>
+                <th>Restrictions</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Address</th>
+                <th>Special Notes</th>
+                <th>Phone Number</th>
+                </tr>
+                <tr>
+                    <td id="data1"></td>
+                    <td id="data2"></td>
+                    <td id="data3"></td>
+                    <td id="data4"></td>
+                    <td id="data5"></td>
+                    <td id="data6"></td>
+                    <td id="data7"></td>
+                    <td id="data8"></td>
+                    <td id="data9"></td>
+
+                </tr>
+            </table>
     </div>
     
       <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
