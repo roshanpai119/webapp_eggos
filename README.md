@@ -1,4 +1,4 @@
-# webapp_eggos
+# WebApp_Eggos
 
 A webapp designed to a web companion to the Android App created by team Eggos. The App aims to help homeless people find the nearest homeless shelter, check requirements and book available space. 
 
