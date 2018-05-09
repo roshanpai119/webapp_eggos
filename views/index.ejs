@@ -27,8 +27,21 @@
         <button onclick="forgotPassword()">Forgot Password</button>
 
     </div>
-    <script src="index.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDaNDNZtpqX7TlmKNAxrl2qefRO2VvStTc",
+        authDomain: "eggos11-buzzshelter.firebaseapp.com",
+        databaseURL: "https://eggos11-buzzshelter.firebaseio.com",
+        projectId: "eggos11-buzzshelter",
+        storageBucket: "eggos11-buzzshelter.appspot.com",
+        messagingSenderId: "533176673062"
+    };
+    firebase.initializeApp(config);
+    </script>
+    <script src="index.js"></script>
 
 </body>
 </html>

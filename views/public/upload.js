@@ -1,7 +1,32 @@
-shelterArray = [];
-
+var shelterArray = []
 var table1 = true;
 var table2 = false;
+
+var button1 = true;
+var button2 = false;
+
+window.onload = function() {
+  loadData();
+  location.href = "#";
+  location.href = "#profile_header";
+};
+
+function loadData() {
+  // get data
+
+  var ref = firebase.database().ref("shelters/");
+
+  ref.once('value', function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val().JSON;
+      var curObject = JSON.parse(childData);
+      appendTable(curObject);
+      loadMap();
+    });
+  });
+
+}
 
 $('#upload-input').on('change', function(){
 
@@ -87,7 +112,23 @@ function csvParser(data) {
 
     _Phone = entries[8];
 
-    shelt = new Shelter(_UID, _Name, _Capacity_max, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
+    shelt = new Shelter(_UID, _Name, _Capacity_max, _Capacity_max, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
+
+    firebase.database().ref('shelters/' + shelt._UID).set({
+      _UID: shelt._UID,
+      _Name: shelt._Name,
+      _Capacity_max: shelt._Capacity_max,
+      _Current_Vacancy: shelt._Current_Vacancy,
+      _Restrictions: shelt._Restrictions,
+      _lat: shelt._lat,
+      _lon: shelt._lon,
+      _Addr: shelt._Addr,
+      _Notes: shelt._Notes,
+      _Phone: shelt._Phone,
+      JSON: JSON.stringify(shelt),
+    });
+
+
     shelterArray.push(shelt);
     appendTable(shelt);
 
@@ -115,6 +156,11 @@ function appendTable(shelt) {
 
     var td = document.createElement("td");
     var txt = document.createTextNode(shelt._Capacity_max);
+    td.appendChild(txt);
+    tr.appendChild(td);
+
+    var td = document.createElement("td");
+    var txt = document.createTextNode(shelt._Current_Vacancy);
     td.appendChild(txt);
     tr.appendChild(td);
 
@@ -158,6 +204,8 @@ function appendTable(shelt) {
 }
 
 function search() {
+
+
 
   var input;
   input = document.getElementById("searchBar");
@@ -209,7 +257,7 @@ function search() {
   var td1;
  
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[3];
+      td = tr[i].getElementsByTagName("td")[4];
       td1 = tr[i].getElementsByTagName("td")[1];
 
       if (td) {
@@ -220,9 +268,16 @@ function search() {
         }
       } 
     }
+
+    loadMap();
 }
 
 function displayShelter(object) {
+
+  var x = document.getElementById("sample");
+  x.style.display = "none";
+  var y = document.getElementById("mapbutton");
+  y.style.display = "none";
 
   object = JSON.parse(object.id);
 
@@ -233,12 +288,15 @@ function displayShelter(object) {
   document.getElementById("data1").innerHTML = object._UID;
   document.getElementById("data2").innerHTML = object._Name;
   document.getElementById("data3").innerHTML = object._Capacity_max
+  document.getElementById("vacancy").innerHTML = object._Current_Vacancy;
   document.getElementById("data4").innerHTML = object._Restrictions;
   document.getElementById("data5").innerHTML = object._lat;
   document.getElementById("data6").innerHTML = object._lon;
   document.getElementById("data7").innerHTML = object._Addr;
   document.getElementById("data8").innerHTML = object._Notes;
   document.getElementById("data9").innerHTML = object._Phone;
+
+  canReserve(document.getElementById("data1").innerHTML);
 
 }
 
@@ -263,8 +321,234 @@ function on() {
 
 function showData() {
 
-  table1 = true;
-  table2 = false;
-  on();
+  window.location = "/profile";
 
+}
+
+function reserveSpace() {
+
+  var input = document.getElementById("number").value;
+  
+  if ((input == null) || (input <= 0)) {
+    alert("Please Enter a Valid Number");
+  }
+
+  var space = parseInt(document.getElementById("vacancy").innerText);
+
+  if (input <= space) {
+
+    document.getElementById("vacancy").innerHTML = space - input;
+
+    _UID = document.getElementById("data1").innerText
+    _Name = document.getElementById("data2").innerText
+    _Capacity_max = document.getElementById("data3").innerText
+    _Current_Vacancy = document.getElementById("vacancy").innerText
+    _Restrictions = document.getElementById("data4").innerText
+    _lat = document.getElementById("data5").innerText
+    _lon = document.getElementById("data6").innerText
+    _Addr = document.getElementById("data7").innerText
+    _Notes = document.getElementById("data8").innerText
+    _Phone = document.getElementById("data9").innerText
+
+
+    shelt = new Shelter(_UID, _Name, _Capacity_max, _Current_Vacancy, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
+    var curUser = JSON.parse(document.cookie);
+
+    var id = curUser._Username.replace(/\./g,'@')
+
+    curUser._CurrentOccupancy = input;
+    curUser._CurrentShelterID = _UID;
+
+    firebase.database().ref('users/' + id).set({
+        _Username: curUser._Username,
+        _Password: curUser._Password,
+        _Type: curUser._Type,
+        _CurrentShelterID: _UID,
+        _CurrentOccupancy: input,
+        JSON: JSON.stringify(curUser),
+    });
+
+    document.cookie = JSON.stringify(curUser);
+
+    firebase.database().ref('shelters/' + shelt._UID).set({
+      _UID: shelt._UID,
+      _Name: shelt._Name,
+      _Capacity_max: shelt._Capacity_max,
+      _Current_Vacancy: shelt._Current_Vacancy,
+      _Restrictions: shelt._Restrictions,
+      _lat: shelt._lat,
+      _lon: shelt._lon,
+      _Addr: shelt._Addr,
+      _Notes: shelt._Notes,
+      _Phone: shelt._Phone,
+      JSON: JSON.stringify(shelt),
+    });
+
+    canReserve(_UID);
+
+  } else {
+
+    alert("The number entered isn't valid");
+
+  }
+
+
+
+
+}
+
+function canReserve(_UID) {
+
+  var curUser = JSON.parse(document.cookie);
+
+  if (curUser._CurrentShelterID == -1) {
+
+    button1 = true;
+    button2 = false;
+
+  } else if (curUser._CurrentShelterID == _UID) {
+
+    button1 = false;
+    button2 = true;
+
+  } else {
+
+    button1 = false;
+    button2 = false;
+
+  }
+
+  displayButtons();
+
+
+
+}
+
+function displayButtons() {
+
+  var x = document.getElementById("book");
+  var y = document.getElementById("unbook");
+
+  if (button1 === true) {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+
+  if (button2 === true) {
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+
+}
+
+function unbook() {
+
+  var curUser = JSON.parse(document.cookie);
+
+  // put space back in shelter
+  document.getElementById("vacancy").innerHTML = parseInt(document.getElementById("vacancy").innerText) + parseInt(curUser._CurrentOccupancy);
+
+  _UID = document.getElementById("data1").innerText
+  _Name = document.getElementById("data2").innerText
+  _Capacity_max = document.getElementById("data3").innerText
+  _Current_Vacancy = document.getElementById("vacancy").innerText
+  _Restrictions = document.getElementById("data4").innerText
+  _lat = document.getElementById("data5").innerText
+  _lon = document.getElementById("data6").innerText
+  _Addr = document.getElementById("data7").innerText
+  _Notes = document.getElementById("data8").innerText
+  _Phone = document.getElementById("data9").innerText
+
+  shelt = new Shelter(_UID, _Name, _Capacity_max, _Current_Vacancy, _Restrictions, _lat, _lon, _Addr, _Notes, _Phone);
+
+  var id = curUser._Username.replace(/\./g,'@')
+
+  curUser._CurrentOccupancy = 0;
+  curUser._CurrentShelterID = -1;
+
+  firebase.database().ref('users/' + id).set({
+      _Username: curUser._Username,
+      _Password: curUser._Password,
+      _Type: curUser._Type,
+      _CurrentShelterID: -1,
+      _CurrentOccupancy: 0,
+      JSON: JSON.stringify(curUser),
+  });
+
+  firebase.database().ref('shelters/' + shelt._UID).set({
+    _UID: shelt._UID,
+    _Name: shelt._Name,
+    _Capacity_max: shelt._Capacity_max,
+    _Current_Vacancy: shelt._Current_Vacancy,
+    _Restrictions: shelt._Restrictions,
+    _lat: shelt._lat,
+    _lon: shelt._lon,
+    _Addr: shelt._Addr,
+    _Notes: shelt._Notes,
+    _Phone: shelt._Phone,
+    JSON: JSON.stringify(shelt),
+  });
+
+  document.cookie = JSON.stringify(curUser);
+
+  canReserve(_UID);
+
+}
+
+function logout() {
+    document.cookie = "";
+    window.location = "/";
+}
+
+function loadMap() {
+  var x = document.getElementById("sample");
+  x.style.display = "block";
+          
+  var mapOptions = {
+     center:new google.maps.LatLng(33.762496, -84.415123), zoom: 12,
+     mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+      
+  var map = new google.maps.Map(document.getElementById("sample"),mapOptions);
+
+    var table = document.getElementById("targettable");
+    var marker;
+
+    for (var i = 1; i < table.rows.length; i++) {
+      row = table.rows[i];
+
+      if (row.style.display == "none") {
+
+
+      } else {
+
+      var lon = parseFloat(row.cells[5].innerText);
+      var lat = parseFloat(row.cells[6].innerText);
+
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(lat, lon),
+        map: map,
+     });
+
+     var content = "Name: " + row.cells[1].innerText + " -  Restrictions: " + row.cells[4].innerText;
+
+     var infowindow = new google.maps.InfoWindow()
+   
+   google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+           return function() {
+              infowindow.setContent(content);
+              infowindow.open(map,marker);
+           };
+       })(marker,content,infowindow)); 
+  }
+
+}
+
+}
+
+function mapDisplay() {
+  location.href = "#";
+  location.href = "#sample";
 }

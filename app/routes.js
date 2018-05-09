@@ -17,6 +17,10 @@ module.exports = function (app, passport) {
 
     })
 
+    app.get('/map', function (req, res) {
+        res.render('map.ejs');
+    })
+
 
     //profile
     app.get('/profile', function (req, res) {

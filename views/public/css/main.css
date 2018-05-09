@@ -70,7 +70,7 @@ button:hover {
 div.options {
 
     position: relative;
-    bottom: -215px;
+    top: 70px;
     text-align: center;
     font-size: 16px;
 
@@ -176,3 +176,48 @@ td {
 tr {
     width: 100%;
 }
+
+#book {
+    background: #181aad;
+    color: #fff;
+    border: none;
+    padding: 0;
+    display: block;
+    width: auto;
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#unbook {
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 0;
+    display: block;
+    width: auto;
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#number {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    background: #fff;
+    outline: none;
+    padding: 5px;
+    width: 60px;
+    margin-bottom: 0px;
+}
+
+#sample {
+    padding: 15px;
+    margin-left: 25%;
+}
+
+

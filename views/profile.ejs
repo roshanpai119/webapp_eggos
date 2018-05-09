@@ -6,6 +6,8 @@
     <title>Login to BuzzShelter</title>
             <!-- link to main stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src = "https://maps.googleapis.com/maps/api/js"></script>
+
 </head>
 <body>
     <div id="profile_header" class="profile_header">
@@ -14,6 +16,7 @@
         <input id="upload-input" type="file" name="uploads[]" multiple="multiple">
         <input type="text" id="searchBar" onkeyup="search()" placeholder="Search for names..">
         <button onclick="showData()">Show All</button>
+        <button id="mapbutton" onclick="mapDisplay()">Show Map</button>
 
 
     </div>
@@ -24,9 +27,10 @@
             <th>UID</th>
             <th>Name</th> 
             <th>Maximum Capacity</th>
+            <th>Current Vacancy</th>
             <th>Restrictions</th>
-            <th>Latitude</th>
             <th>Longitude</th>
+            <th>Latitude</th>
             <th>Address</th>
             <th>Special Notes</th>
             <th>Phone Number</th>
@@ -37,35 +41,64 @@
     <div id="specificsheltertable" class="specificsheltertable">
             <table id="newtargettable" style="width:100%">
                 <tr>
-                <th>Dawar</th>
+                <th>UID</th>
                 <th>Name</th> 
                 <th>Maximum Capacity</th>
+                <th>Current Vacancy</th>
                 <th>Restrictions</th>
-                <th>Latitude</th>
                 <th>Longitude</th>
+                <th>Latitude</th>
                 <th>Address</th>
                 <th>Special Notes</th>
                 <th>Phone Number</th>
+                <th></th>
+                <th></th>
                 </tr>
                 <tr>
                     <td id="data1"></td>
                     <td id="data2"></td>
                     <td id="data3"></td>
+                    <td id="vacancy"></td>
                     <td id="data4"></td>
                     <td id="data5"></td>
                     <td id="data6"></td>
                     <td id="data7"></td>
                     <td id="data8"></td>
                     <td id="data9"></td>
+                    <td id="data10">
+                        <input id="number" type="number">
+                    </td>
+                    <td id="data11">
+                        <button id="book" class="book" onclick="reserveSpace()">Reserve Space</button>
+                    </td>
+                    <td id = "data12">
+                        <button id="unbook" class="unbook" onclick="unbook()">Remove Reservation</button>
+                    </td>
 
                 </tr>
             </table>
     </div>
+
+    <div id = "sample" style = "width:570px; height:580px;"></div>
     
-      <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-      <script src="/upload.js"></script>
-      <script src="/index.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDaNDNZtpqX7TlmKNAxrl2qefRO2VvStTc",
+        authDomain: "eggos11-buzzshelter.firebaseapp.com",
+        databaseURL: "https://eggos11-buzzshelter.firebaseio.com",
+        projectId: "eggos11-buzzshelter",
+        storageBucket: "eggos11-buzzshelter.appspot.com",
+        messagingSenderId: "533176673062"
+    };
+    firebase.initializeApp(config);
+    </script>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/upload.js"></script>
+    <script src="/index.js"></script>
 
 </body>
 </html>

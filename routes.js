@@ -33,6 +33,10 @@ module.exports = function (app, passport) {
         res.render('Shelter.ejs');
     });
 
+    app.get('/map', function (req, res) {
+        res.render('map.ejs');
+    })
+
     //logout
     app.get('/logout', function (req, res) {
         req.logout();
