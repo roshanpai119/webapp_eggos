@@ -1,6 +1,6 @@
 // app/routes.js
 //
-module.exports = function (app, passport) {
+module.exports =function (app, passport) {
 
 
     //HOME PAGE TO LOGIN
